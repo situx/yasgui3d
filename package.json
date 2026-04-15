@@ -1,0 +1,55 @@
+{
+  "name": "yasgui-geo-tg",
+  "version": "0.0.2",
+  "description": "A Yasgui plugin to add a geo tab",
+  "keywords": [
+    "yasgui",
+    "geosparql",
+    "sparql",
+    "yasr",
+    "geo",
+    "geometry",
+    "ontology"
+  ],
+  "homepage": "https://github.com/Thib-G/yasgui-geo-tg#readme",
+  "bugs": {
+    "url": "https://github.com/Thib-G/yasgui-geo-tg/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Thib-G/yasgui-geo-tg.git"
+  },
+  "license": "MIT",
+  "author": "Thibaut Goelff",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build:demo": "vite build demo",
+    "preview:demo": "vite preview --port 5174",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "@zazuko/yasgui": "^4.6.1"
+  },
+  "dependencies": {
+    "three": "^0.183.2",
+    "datguivr": "^0.1.6",
+    "three-objloader-wrap": "^1.0.9",
+    "three-ply-loader": "^1.0.0",
+    "three-controls-orbit": "^1.0.0",
+    "three-gltf-loader": "^1.111.0",
+    "three-stl-loader": "^1.0.6",
+    "three-x3d-loader": "^0.4.0",
+    "three-orbit-controls": "^82.1.0"
+
+  }
+}
