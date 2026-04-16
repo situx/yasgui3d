@@ -32656,8 +32656,6 @@ void main() {
       cameraFolder.add(camera2.position, "x").min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
       cameraFolder.add(camera2.position, "y").min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
       cameraFolder.add(camera2.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
-      gui.add(objects, "visible").name("Meshes");
-      gui.add(annotations, "visible").name("Annotations");
       gui.add(this.axesHelper, "visible").name("Axis Helper");
       this.animate();
     }
