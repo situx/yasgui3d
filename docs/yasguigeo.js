@@ -64154,7 +64154,7 @@ Reason: ${info.reason}`;
      */
     async draw() {
       this.updateColumns();
-      await this.updateMap();
+      await this.update3DView();
     }
     fitCameraToSelection(camera2, controls, selection, fitOffset = 1.2) {
       this.box.makeEmpty();
