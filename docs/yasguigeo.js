@@ -32641,7 +32641,7 @@ void main() {
       console.log("Depth: " + (maxz - minz));
       this.scene.add(annotations);
       let centervec = new Vector3();
-      let controls = new OrbitControls(this.camera, this.renderer.domElement);
+      let controls = new OrbitControls(camera2, this.renderer.domElement);
       controls.target.set(0, 0, 0);
       camera2.position.x = 0;
       camera2.position.y = 0;
