@@ -32085,6 +32085,7 @@ void main() {
       this.camera.position.z = 150;
       this.controls.maxDistance = Math.max(1e3, 1e3, 1e3);
       this.controls.update();
+      this.controls.addEventListener("change", this.renderer);
       const updateCamera = () => {
         this.camera.updateProjectionMatrix();
       };
@@ -32100,7 +32101,7 @@ void main() {
           this.yasr.results.json.results.bindings,
           colName
         );
-        objects.add(object3d);
+        objects.add(object3d[0]);
       }
       this.scene.add(objects);
       this.animate();
