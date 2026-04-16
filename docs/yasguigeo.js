@@ -32007,7 +32007,7 @@ void main() {
       const firstRow = bindings[0] ?? {};
       this.geometry3DColumns = Object.keys(firstRow).filter(
         (k) => firstRow[k].datatype && Object.keys(conversions).includes(firstRow[k].datatype)
-      ).map((colName2) => ({ colName: colName2, datatype: firstRow[colName2].datatype }));
+      ).map((colName) => ({ colName, datatype: firstRow[colName].datatype }));
     }
     /**
      * Called by YASR to render the visualization.
@@ -32095,7 +32095,8 @@ void main() {
       cameraFolder.add(this.camera.position, "y").min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
       cameraFolder.add(this.camera.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
       gui.add(this.axesHelper, "visible").name("Axis Helper");
-      for (const object3Column of this.geometry3DColumns) {
+      for (const object3DColumn of this.geometry3DColumns) {
+        const colName = object3DColumn.colName;
         const object3d = await create3DObject(
           this.yasr.results.json.results.bindings,
           colName
@@ -32132,7 +32133,7 @@ void main() {
         this.wrapper.appendChild(this.navcontainer);
       }
       this.yasr.resultsEl.appendChild(this.wrapper);
-      this.initThreeJS("threejs");
+      await this.initThreeJS("threejs");
     }
     /**
      * Return an element used as a icon for the plugin.
