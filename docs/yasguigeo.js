@@ -65973,7 +65973,7 @@ Reason: ${info.reason}`;
         this.wrapper.appendChild(this.navcontainer);
       }
       this.yasr.resultsEl.appendChild(this.wrapper);
-      this.initThreeJS(this.container);
+      this.initThreeJS("threejs");
     }
     /**
      * Return an element used as a icon for the plugin.
