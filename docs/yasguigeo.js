@@ -31960,6 +31960,15 @@ void main() {
     let object = loader.parse(ply);
     return new Mesh(object, material);
   };
+  var create3DObject = async (bindings, column) => ({
+    type: "FeatureCollection",
+    features: await Promise.all(
+      bindings.map(async (item) => {
+        const converter = conversions[item[column].datatype];
+        return converter ? await converter(item[column].value) : null;
+      })
+    )
+  });
   var conversions = {
     "http://www.opengis.net/ont/geosparql#plyLiteral": parsePLY
   };
@@ -31998,7 +32007,7 @@ void main() {
       const firstRow = bindings[0] ?? {};
       this.geometry3DColumns = Object.keys(firstRow).filter(
         (k) => firstRow[k].datatype && Object.keys(conversions).includes(firstRow[k].datatype)
-      ).map((colName) => ({ colName, datatype: firstRow[colName].datatype }));
+      ).map((colName2) => ({ colName: colName2, datatype: firstRow[colName2].datatype }));
     }
     /**
      * Called by YASR to render the visualization.
@@ -32028,7 +32037,7 @@ void main() {
       this.camera.position.copy(this.controls.target).sub(direction);
       this.controls.update();
     }
-    initThreeJS(domelement, verts, meshurls) {
+    async initThreeJS(domelement, verts, meshurls) {
       let loader;
       let minz = Number.MAX_VALUE;
       let maxz = Number.MIN_VALUE;
@@ -32087,7 +32096,11 @@ void main() {
       cameraFolder.add(this.camera.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
       gui.add(this.axesHelper, "visible").name("Axis Helper");
       for (const object3Column of this.geometry3DColumns) {
-        objects.add(object3Column);
+        const object3d = await create3DObject(
+          this.yasr.results.json.results.bindings,
+          colName
+        );
+        objects.add(object3d);
       }
       this.scene.add(objects);
       this.animate();
