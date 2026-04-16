@@ -32630,16 +32630,16 @@ void main() {
       document.getElementById(domelement).appendChild(this.renderer.domElement);
       let bbox = null;
       let camera2 = new PerspectiveCamera(90, width / height, 0.1, 2e3);
-      scene_default.add(new AmbientLight(2236962));
+      this.scene.add(new AmbientLight(2236962));
       const light = new DirectionalLight(16777215, 1);
       light.position.set(20, 20, 0);
-      scene_default.add(light);
+      this.scene.add(light);
       lightingFolder.add(light.position, "x").min(-5).max(5).step(0.01).name("X Position");
       lightingFolder.add(light.position, "y").min(-5).max(5).step(0.01).name("Y Position");
       lightingFolder.add(light.position, "z").min(-5).max(5).step(0.01).name("Z Position");
-      scene_default.add(this.axesHelper);
+      this.scene.add(this.axesHelper);
       console.log("Depth: " + (maxz - minz));
-      scene_default.add(annotations);
+      this.scene.add(annotations);
       let centervec = new Vector3();
       let controls = new OrbitControls(this.camera, this.renderer.domElement);
       controls.target.set(0, 0, 0);
@@ -32664,7 +32664,7 @@ void main() {
     animate() {
       requestAnimationFrame(animate);
       this.controls.update();
-      this.renderer.render(scene_default, this.camera);
+      this.renderer.render(this.scene, this.camera);
     }
     /**
      * Build or update the Leaflet map with the current results.
