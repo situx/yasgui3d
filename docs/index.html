@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>YasGUI Geo TestPage</title>
+<title>YasGUI 3D TestPage</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
@@ -162,11 +162,11 @@ async function queryFile(){
 </style>
 </head>
 <body>
-<h2>YasGUI Geo GeoSPARQL Test</h2>
+<h2>YasGUI 3D GeoSPARQL Test</h2>
 <div class="row">
 
   <div id="yasgui" class="col-12">
-This homepage showcases a Geo extension for YasGUI with support for GeoSPARQL literals<br/>
+This homepage showcases a 3D extension for YasGUI with support for GeoSPARQL literals<br/>
 Sample Queries: <select id="functions" onchange="showQuery()">
 </select><br/>
 <button id="query" onclick="queryFile()" class="yasqe_queryButton query_valid">
@@ -186,15 +186,15 @@ for(fun in geof){
 	}
 }
 document.getElementById("functions").innerHTML=options
-const GeoPlugin = window.YasguiGeoTg && (window.YasguiGeoTg.default || window.YasguiGeoTg);
+const YasGUI3DPlugin = window.Yasgui3DTg && (window.Yasgui3DTg.default || window.Yasgui3DTg);
 
-console.log(GeoPlugin)
+console.log(YasGUI3DPlugin)
 	
 // Register the plugin with YASR before creating Yasgui
-Yasgui.Yasr.registerPlugin('geo', GeoPlugin);
+Yasgui.Yasr.registerPlugin('yasgui3d', YasGUI3DPlugin);
 
 const yasgui = new Yasgui(document.getElementById("yasgui"),{
-	"yasr":{"pluginOrder": ["table","response","geo"],"defaultPlugin":"geo"},
+	"yasr":{"pluginOrder": ["table","response","yasgui3d"],"defaultPlugin":"yasgui3d"},
 	"yasqe":{"showQueryButton": false},
 	"requestConfig": { "endpoint": endpoint},  
 	"copyEndpointOnNewTab": false}
