@@ -65912,6 +65912,8 @@ Reason: ${info.reason}`;
       this.renderer = new WebGLRenderer({ antialias: false });
       this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setSize(width, height);
+      console.log(Renderer_default);
+      console.log(Renderer_default.prototype.domElement);
       document.getElementById(domelement).appendChild(Renderer_default.prototype.domElement);
       let bbox = null;
       let camera2 = new PerspectiveCamera(90, width / height, 0.1, 2e3);
