@@ -31960,15 +31960,14 @@ void main() {
     let object = loader.parse(ply);
     return new Mesh(object, material);
   };
-  var create3DObject = async (bindings, column) => ({
-    type: "FeatureCollection",
-    features: await Promise.all(
-      bindings.map(async (item) => {
+  var create3DObject = async (bindings, column) => await Promise.all(
+    bindings.map(
+      async (item) => {
         const converter = conversions[item[column].datatype];
         return converter ? await converter(item[column].value) : null;
-      })
+      }
     )
-  });
+  );
   var conversions = {
     "http://www.opengis.net/ont/geosparql#plyLiteral": parsePLY
   };
