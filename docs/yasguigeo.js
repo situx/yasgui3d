@@ -32629,7 +32629,7 @@ void main() {
       this.renderer.setSize(width, height);
       document.getElementById(domelement).appendChild(this.renderer.domElement);
       let bbox = null;
-      let camera2 = new PerspectiveCamera(90, width / height, 0.1, 2e3);
+      this.camera = new PerspectiveCamera(90, width / height, 0.1, 2e3);
       this.scene.add(new AmbientLight(2236962));
       const light = new DirectionalLight(16777215, 1);
       light.position.set(20, 20, 0);
@@ -32641,21 +32641,21 @@ void main() {
       console.log("Depth: " + (maxz - minz));
       this.scene.add(annotations);
       let centervec = new Vector3();
-      let controls = new OrbitControls(camera2, this.renderer.domElement);
-      controls.target.set(0, 0, 0);
-      camera2.position.x = 0;
-      camera2.position.y = 0;
-      camera2.position.z = 150;
-      controls.maxDistance = Math.max(1e3, 1e3, 1e3);
-      controls.update();
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+      this.controls.target.set(0, 0, 0);
+      this.camera.position.x = 0;
+      this.camera.position.y = 0;
+      this.camera.position.z = 150;
+      this.controls.maxDistance = Math.max(1e3, 1e3, 1e3);
+      this.controls.update();
       const updateCamera = () => {
-        camera2.updateProjectionMatrix();
+        this.camera.updateProjectionMatrix();
       };
       const cameraFolder = geometryFolder.addFolder("Camera");
-      cameraFolder.add(camera2, "fov", 1, 180).name("Zoom").onChange(updateCamera);
-      cameraFolder.add(camera2.position, "x").min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
-      cameraFolder.add(camera2.position, "y").min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
-      cameraFolder.add(camera2.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
+      cameraFolder.add(this.camera, "fov", 1, 180).name("Zoom").onChange(updateCamera);
+      cameraFolder.add(this.camera.position, "x").min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
+      cameraFolder.add(this.camera.position, "y").min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
+      cameraFolder.add(this.camera.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
       gui.add(this.axesHelper, "visible").name("Axis Helper");
       this.animate();
     }
