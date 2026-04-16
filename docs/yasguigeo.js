@@ -32094,6 +32094,7 @@ void main() {
       cameraFolder.add(this.camera.position, "x").min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
       cameraFolder.add(this.camera.position, "y").min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
       cameraFolder.add(this.camera.position, "z").min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
+      gui.add(objects, "visible").name("Meshes");
       gui.add(this.axesHelper, "visible").name("Axis Helper");
       for (const object3DColumn of this.geometry3DColumns) {
         const colName = object3DColumn.colName;
