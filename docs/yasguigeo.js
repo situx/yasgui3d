@@ -29395,14 +29395,14 @@ void main() {
       renderer = new WebGLRenderer({ antialias: true, canvas });
       renderer.setPixelRatio(pixelRatio);
       renderer.setSize(width, height, false);
-      animate2();
+      animate();
     });
   }
-  function animate2() {
+  function animate() {
     group.rotation.y = -Date.now() / 4e3;
     renderer.render(scene, camera);
     if (self.requestAnimationFrame) {
-      self.requestAnimationFrame(animate2);
+      self.requestAnimationFrame(animate);
     } else {
     }
   }
@@ -32660,7 +32660,7 @@ void main() {
       this.animate();
     }
     animate() {
-      requestAnimationFrame(animate);
+      requestAnimationFrame(this.animate);
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
     }
