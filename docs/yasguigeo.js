@@ -31958,7 +31958,10 @@ void main() {
     ply = ply.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new PLYLoader();
     let object = loader.parse(ply);
-    return new Mesh(object, material);
+    console.log(object);
+    const mesh = new Mesh(object, material);
+    console.log(mesh);
+    return mesh;
   };
   var create3DObject = async (bindings, column) => await Promise.all(
     bindings.map(
