@@ -20,9 +20,105 @@
     geof={
         "http://www.opengis.net/ont/geosparql#plyLiteral":"geo:plyLiteral",
         "http://www.opengis.net/ont/geosparql#objLiteral":"geo:objLiteral",
-		"http://www.opengis.net/ont/geosparql#gltfLiteral":"geo:gltfLiteral"
+		"http://www.opengis.net/ont/geosparql#gltfLiteral":"geo:gltfLiteral",
+		"http://www.opengis.net/ont/geosparql#stlLiteral":"geo:stlLiteral"
     }
 	geofqueries={
+"http://www.opengis.net/ont/geosparql#stlLiteral":`PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal
+WHERE {
+  BIND("""
+solid STL 
+  facet normal  0.000000e+00  0.000000e+00  1.000000e+00
+    outer loop
+      vertex  -3.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -3.500000e+01  4.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal  0.000000e+00  0.000000e+00  1.000000e+00
+    outer loop
+      vertex  -3.500000e+01  4.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  4.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal  0.000000e+00  0.000000e+00 -1.000000e+00
+    outer loop
+      vertex  -3.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -3.500000e+01  6.000000e+01  0.000000e+00
+    endloop
+  endfacet
+  facet normal -0.000000e+00  0.000000e+00 -1.000000e+00
+    outer loop
+      vertex  -3.500000e+01  6.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  6.000000e+01  0.000000e+00
+    endloop
+  endfacet
+  facet normal  0.000000e+00 -1.000000e+00  0.000000e+00
+    outer loop
+      vertex  -5.500000e+01  4.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -3.500000e+01  4.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal  0.000000e+00 -1.000000e+00 -0.000000e+00
+    outer loop
+      vertex  -3.500000e+01  4.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -3.500000e+01  4.000000e+01  0.000000e+00
+    endloop
+  endfacet
+  facet normal -1.000000e+00 -0.000000e+00 -0.000000e+00
+    outer loop
+      vertex  -5.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  6.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  4.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal -1.000000e+00  0.000000e+00  0.000000e+00
+    outer loop
+      vertex  -5.500000e+01  4.000000e+01  2.000000e+01
+      vertex  -5.500000e+01  6.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  4.000000e+01  0.000000e+00
+    endloop
+  endfacet
+  facet normal  0.000000e+00  1.000000e+00  0.000000e+00
+    outer loop
+      vertex  -3.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -3.500000e+01  6.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  6.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal  0.000000e+00  1.000000e+00  0.000000e+00
+    outer loop
+      vertex  -5.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -3.500000e+01  6.000000e+01  0.000000e+00
+      vertex  -5.500000e+01  6.000000e+01  0.000000e+00
+    endloop
+  endfacet
+  facet normal  1.000000e+00 -0.000000e+00  0.000000e+00
+    outer loop
+      vertex  -3.500000e+01  4.000000e+01  2.000000e+01
+      vertex  -3.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -3.500000e+01  6.000000e+01  2.000000e+01
+    endloop
+  endfacet
+  facet normal  1.000000e+00  0.000000e+00  0.000000e+00
+    outer loop
+      vertex  -3.500000e+01  6.000000e+01  2.000000e+01
+      vertex  -3.500000e+01  4.000000e+01  0.000000e+00
+      vertex  -3.500000e+01  6.000000e+01  0.000000e+00
+    endloop
+  endfacet
+endsolid vcg
+"""^^geo:stlLiteral  AS ?literal)
+}`,
 "http://www.opengis.net/ont/geosparql#gltfLiteral":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
@@ -171,7 +267,7 @@ BIND("""
             "uri": "Box0.bin"
         }
     ]
-}"""^^geo:objLiteral AS ?literal)
+}"""^^geo:gltfLiteral AS ?literal)
 }`,
 "http://www.opengis.net/ont/geosparql#objLiteral":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
