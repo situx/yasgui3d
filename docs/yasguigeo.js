@@ -37917,7 +37917,6 @@ void main() {
       document.getElementById(domelement).appendChild(this.renderer.domElement);
       let bbox = null;
       this.camera = new PerspectiveCamera(90, width / height, 0.1, 2e3);
-      this.scene.add(new AmbientLight(2236962));
       this.light = new DirectionalLight(16777215, 1);
       this.light.position.set(20, 20, 0);
       this.scene.add(this.light);
