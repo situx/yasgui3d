@@ -37926,8 +37926,8 @@ void main() {
       lightingFolder.add(this.light.position, "z").min(-5).max(5).step(0.01).name("Z Position");
       const color = 16777215;
       const intensity = 1;
-      const light = new AmbientLight(color, intensity);
-      this.scene.add(light);
+      this.thelight = new AmbientLight(color, intensity);
+      this.scene.add(this.thelight);
       this.scene.add(this.axesHelper);
       console.log("Depth: " + (maxz - minz));
       this.scene.add(annotations);
