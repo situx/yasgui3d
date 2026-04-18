@@ -32055,7 +32055,6 @@ void main() {
       let first = true;
       let height = 500;
       let width = 480;
-      annotations = [];
       const gui = new GUI({ autoPlace: false });
       gui.domElement.id = "gui";
       document.getElementById("threejsnav").appendChild(gui.domElement);
