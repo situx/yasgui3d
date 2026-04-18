@@ -37898,6 +37898,7 @@ void main() {
       let annotations = new Group();
       const objects = new Group();
       this.clear();
+      this.scene = new Scene();
       console.log(verts);
       const svgShape = new Shape();
       let first = true;
