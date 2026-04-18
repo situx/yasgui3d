@@ -31999,6 +31999,7 @@ void main() {
       this.size = new Vector3();
       this.scene = new Scene();
       this.axesHelper = new AxesHelper(Math.max(1e3, 1e3, 1e3));
+      this.animatefunc = () => this.animate();
     }
     /**
      * Update detected geometry columns based on current YASR results.
@@ -32112,7 +32113,7 @@ void main() {
       this.animate();
     }
     animate() {
-      requestAnimationFrame(this.animate);
+      requestAnimationFrame(this.animatefunc);
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
     }
