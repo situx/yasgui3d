@@ -37824,8 +37824,29 @@ void main() {
       this.box = new Box3();
       this.size = new Vector3();
       this.scene = new Scene();
+      this.renderer = null;
+      this.scene = null;
       this.axesHelper = new AxesHelper(Math.max(1e3, 1e3, 1e3));
       this.animatefunc = () => this.animate();
+    }
+    clear() {
+      if (this.scene != null && this.rendere != null) {
+        this.renderer.dispose();
+        this.scene.traverse((object) => {
+          if (!object.isMesh) return;
+          this.deleteObject(object);
+        });
+      }
+    }
+    deleteObject(object) {
+      object.geometry.dispose();
+      if (object.material instanceof Array) {
+        object.material.forEach((material2) => material2.dispose());
+      } else {
+        object.material.dispose();
+      }
+      object.removeFromParent();
+      this.scene.remove(object);
     }
     /**
      * Update detected geometry columns based on current YASR results.
@@ -37876,6 +37897,7 @@ void main() {
       let vertarray = [];
       let annotations = new Group();
       const objects = new Group();
+      this.clear();
       console.log(verts);
       const svgShape = new Shape();
       let first = true;
