@@ -32114,6 +32114,10 @@ void main() {
     }
     animate() {
       requestAnimationFrame(this.animatefunc);
+      console.log(this.controls);
+      console.log(this.renderer);
+      console.log(this.scene);
+      console.log(this.camera);
       this.controls.update();
       this.renderer.render(this.scene, this.camera);
     }
