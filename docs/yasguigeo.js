@@ -32105,8 +32105,10 @@ void main() {
           this.yasr.results.json.results.bindings,
           colName
         );
+        console.log(object3d);
         objects.add(object3d[0]);
       }
+      console.log(objects);
       this.scene.add(objects);
       this.animate();
     }
