@@ -37756,14 +37756,14 @@ void main() {
     let loader = new OBJLoader();
     let object = loader.parse(obj);
     console.log(object);
-    const mesh = new Mesh(object, material);
+    const mesh = new Mesh(object.getAll()[0], material);
     console.log(mesh);
     return mesh;
   };
   var parseGLTF = async (gltf) => {
     gltf = gltf.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new GLTFLoader();
-    let object = loader.parse(gltf);
+    let object = await loader.parseAsync(gltf, "http://www.gltf.com/data/");
     console.log(object);
     const mesh = new Mesh(object, material);
     console.log(mesh);
