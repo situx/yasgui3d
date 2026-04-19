@@ -37898,6 +37898,8 @@ void main() {
       let annotations = new Group();
       const objects = new Group();
       this.clear();
+      document.getElementById(domelement).innerHTML = "";
+      document.getElementById("threejsnav").innerHTML = "";
       this.scene = new Scene();
       console.log(verts);
       const svgShape = new Shape();
@@ -37924,7 +37926,7 @@ void main() {
       lightingFolder.add(this.light.position, "x").min(-5).max(5).step(0.01).name("X Position");
       lightingFolder.add(this.light.position, "y").min(-5).max(5).step(0.01).name("Y Position");
       lightingFolder.add(this.light.position, "z").min(-5).max(5).step(0.01).name("Z Position");
-      const color = 16777215;
+      const color = 4210752;
       const intensity = 1;
       this.thelight = new AmbientLight(color, intensity);
       this.scene.add(this.thelight);
