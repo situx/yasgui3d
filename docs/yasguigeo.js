@@ -37738,7 +37738,9 @@ void main() {
     color: 16711680,
     flatShading: true,
     vertexColors: true,
-    wireframe: false
+    wireframe: false,
+    emissive: new Color(1, 1, 1),
+    emissiveIntensity: 0.8
   });
   var parsePLY = async (ply) => {
     ply = ply.replaceAll(/^\s+|\s+$/gu, "");
