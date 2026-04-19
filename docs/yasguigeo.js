@@ -37869,7 +37869,7 @@ void main() {
       this.updateColumns();
       await this.update3DView();
     }
-    fitCameraToSelection(camera, controls, selection, fitOffset = 1.2) {
+    fitCameraToSelection(camera, controls, selection, fitOffset = 1.5) {
       this.box.makeEmpty();
       for (const object of selection) {
         this.box.expandByObject(object);
