@@ -15806,11 +15806,11 @@ var Yasgui3D = (() => {
       data.fragmentShader = this.fragmentShader;
       data.lights = this.lights;
       data.clipping = this.clipping;
-      const extensions = {};
+      const extensions2 = {};
       for (const key in this.extensions) {
-        if (this.extensions[key] === true) extensions[key] = true;
+        if (this.extensions[key] === true) extensions2[key] = true;
       }
-      if (Object.keys(extensions).length > 0) data.extensions = extensions;
+      if (Object.keys(extensions2).length > 0) data.extensions = extensions2;
       return data;
     }
   };
@@ -21342,7 +21342,7 @@ var Yasgui3D = (() => {
       disableUnusedAttributes
     };
   }
-  function WebGLBufferRenderer(gl, extensions, info) {
+  function WebGLBufferRenderer(gl, extensions2, info) {
     let mode;
     function setMode(value) {
       mode = value;
@@ -21358,7 +21358,7 @@ var Yasgui3D = (() => {
     }
     function renderMultiDraw(starts, counts, drawCount) {
       if (drawCount === 0) return;
-      const extension = extensions.get("WEBGL_multi_draw");
+      const extension = extensions2.get("WEBGL_multi_draw");
       extension.multiDrawArraysWEBGL(mode, starts, 0, counts, 0, drawCount);
       let elementCount = 0;
       for (let i = 0; i < drawCount; i++) {
@@ -21368,7 +21368,7 @@ var Yasgui3D = (() => {
     }
     function renderMultiDrawInstances(starts, counts, drawCount, primcount) {
       if (drawCount === 0) return;
-      const extension = extensions.get("WEBGL_multi_draw");
+      const extension = extensions2.get("WEBGL_multi_draw");
       if (extension === null) {
         for (let i = 0; i < starts.length; i++) {
           renderInstances(starts[i], counts[i], primcount[i]);
@@ -21388,12 +21388,12 @@ var Yasgui3D = (() => {
     this.renderMultiDraw = renderMultiDraw;
     this.renderMultiDrawInstances = renderMultiDrawInstances;
   }
-  function WebGLCapabilities(gl, extensions, parameters, utils) {
+  function WebGLCapabilities(gl, extensions2, parameters, utils) {
     let maxAnisotropy;
     function getMaxAnisotropy() {
       if (maxAnisotropy !== void 0) return maxAnisotropy;
-      if (extensions.has("EXT_texture_filter_anisotropic") === true) {
-        const extension = extensions.get("EXT_texture_filter_anisotropic");
+      if (extensions2.has("EXT_texture_filter_anisotropic") === true) {
+        const extension = extensions2.get("EXT_texture_filter_anisotropic");
         maxAnisotropy = gl.getParameter(extension.MAX_TEXTURE_MAX_ANISOTROPY_EXT);
       } else {
         maxAnisotropy = 0;
@@ -21407,7 +21407,7 @@ var Yasgui3D = (() => {
       return true;
     }
     function textureTypeReadable(textureType) {
-      const halfFloatSupportedByExt = textureType === HalfFloatType && (extensions.has("EXT_color_buffer_half_float") || extensions.has("EXT_color_buffer_float"));
+      const halfFloatSupportedByExt = textureType === HalfFloatType && (extensions2.has("EXT_color_buffer_half_float") || extensions2.has("EXT_color_buffer_float"));
       if (textureType !== UnsignedByteType && utils.convert(textureType) !== gl.getParameter(gl.IMPLEMENTATION_COLOR_READ_TYPE) && // Edge and Chrome Mac < 52 (#9513)
       textureType !== FloatType && !halfFloatSupportedByExt) {
         return false;
@@ -21435,7 +21435,7 @@ var Yasgui3D = (() => {
       precision = maxPrecision;
     }
     const logarithmicDepthBuffer = parameters.logarithmicDepthBuffer === true;
-    const reversedDepthBuffer = parameters.reversedDepthBuffer === true && extensions.has("EXT_clip_control");
+    const reversedDepthBuffer = parameters.reversedDepthBuffer === true && extensions2.has("EXT_clip_control");
     const maxTextures = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
     const maxVertexTextures = gl.getParameter(gl.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
     const maxTextureSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
@@ -22628,13 +22628,13 @@ var Yasgui3D = (() => {
     };
   }
   function WebGLExtensions(gl) {
-    const extensions = {};
+    const extensions2 = {};
     function getExtension(name) {
-      if (extensions[name] !== void 0) {
-        return extensions[name];
+      if (extensions2[name] !== void 0) {
+        return extensions2[name];
       }
       const extension = gl.getExtension(name);
-      extensions[name] = extension;
+      extensions2[name] = extension;
       return extension;
     }
     return {
@@ -22748,7 +22748,7 @@ var Yasgui3D = (() => {
       getWireframeAttribute
     };
   }
-  function WebGLIndexedBufferRenderer(gl, extensions, info) {
+  function WebGLIndexedBufferRenderer(gl, extensions2, info) {
     let mode;
     function setMode(value) {
       mode = value;
@@ -22769,7 +22769,7 @@ var Yasgui3D = (() => {
     }
     function renderMultiDraw(starts, counts, drawCount) {
       if (drawCount === 0) return;
-      const extension = extensions.get("WEBGL_multi_draw");
+      const extension = extensions2.get("WEBGL_multi_draw");
       extension.multiDrawElementsWEBGL(mode, counts, 0, type, starts, 0, drawCount);
       let elementCount = 0;
       for (let i = 0; i < drawCount; i++) {
@@ -22779,7 +22779,7 @@ var Yasgui3D = (() => {
     }
     function renderMultiDrawInstances(starts, counts, drawCount, primcount) {
       if (drawCount === 0) return;
-      const extension = extensions.get("WEBGL_multi_draw");
+      const extension = extensions2.get("WEBGL_multi_draw");
       if (extension === null) {
         for (let i = 0; i < starts.length; i++) {
           renderInstances(starts[i] / bytesPerElement, counts[i], primcount[i]);
@@ -24505,7 +24505,7 @@ var Yasgui3D = (() => {
       this.usedTimes = 0;
     }
   };
-  function WebGLPrograms(renderer, environments, extensions, capabilities, bindingStates, clipping) {
+  function WebGLPrograms(renderer, environments, extensions2, capabilities, bindingStates, clipping) {
     const _programLayers = new Layers();
     const _customShaders = new WebGLShaderCache();
     const _activeChannels = /* @__PURE__ */ new Set();
@@ -24739,9 +24739,9 @@ var Yasgui3D = (() => {
         useDepthPacking: material2.depthPacking >= 0,
         depthPacking: material2.depthPacking || 0,
         index0AttributeName: material2.index0AttributeName,
-        extensionClipCullDistance: HAS_EXTENSIONS && material2.extensions.clipCullDistance === true && extensions.has("WEBGL_clip_cull_distance"),
-        extensionMultiDraw: (HAS_EXTENSIONS && material2.extensions.multiDraw === true || IS_BATCHEDMESH) && extensions.has("WEBGL_multi_draw"),
-        rendererExtensionParallelShaderCompile: extensions.has("KHR_parallel_shader_compile"),
+        extensionClipCullDistance: HAS_EXTENSIONS && material2.extensions.clipCullDistance === true && extensions2.has("WEBGL_clip_cull_distance"),
+        extensionMultiDraw: (HAS_EXTENSIONS && material2.extensions.multiDraw === true || IS_BATCHEDMESH) && extensions2.has("WEBGL_multi_draw"),
+        rendererExtensionParallelShaderCompile: extensions2.has("KHR_parallel_shader_compile"),
         customProgramCacheKey: material2.customProgramCacheKey()
       };
       parameters.vertexUv1s = _activeChannels.has(1);
@@ -25244,7 +25244,7 @@ var Yasgui3D = (() => {
   function shadowCastingAndTexturingLightsFirst(lightA, lightB) {
     return (lightB.castShadow ? 2 : 0) - (lightA.castShadow ? 2 : 0) + (lightB.map ? 1 : 0) - (lightA.map ? 1 : 0);
   }
-  function WebGLLights(extensions) {
+  function WebGLLights(extensions2) {
     const cache = new UniformsCache();
     const shadowCache = ShadowUniformsCache();
     const state = {
@@ -25409,7 +25409,7 @@ var Yasgui3D = (() => {
         }
       }
       if (rectAreaLength > 0) {
-        if (extensions.has("OES_texture_float_linear") === true) {
+        if (extensions2.has("OES_texture_float_linear") === true) {
           state.rectAreaLTC1 = UniformsLib.LTC_FLOAT_1;
           state.rectAreaLTC2 = UniformsLib.LTC_FLOAT_2;
         } else {
@@ -25509,8 +25509,8 @@ var Yasgui3D = (() => {
       state
     };
   }
-  function WebGLRenderState(extensions) {
-    const lights = new WebGLLights(extensions);
+  function WebGLRenderState(extensions2) {
+    const lights = new WebGLLights(extensions2);
     const lightsArray = [];
     const shadowsArray = [];
     function init(camera) {
@@ -25546,17 +25546,17 @@ var Yasgui3D = (() => {
       pushShadow
     };
   }
-  function WebGLRenderStates(extensions) {
+  function WebGLRenderStates(extensions2) {
     let renderStates = /* @__PURE__ */ new WeakMap();
     function get(scene, renderCallDepth = 0) {
       const renderStateArray = renderStates.get(scene);
       let renderState;
       if (renderStateArray === void 0) {
-        renderState = new WebGLRenderState(extensions);
+        renderState = new WebGLRenderState(extensions2);
         renderStates.set(scene, [renderState]);
       } else {
         if (renderCallDepth >= renderStateArray.length) {
-          renderState = new WebGLRenderState(extensions);
+          renderState = new WebGLRenderState(extensions2);
           renderStateArray.push(renderState);
         } else {
           renderState = renderStateArray[renderCallDepth];
@@ -25906,7 +25906,7 @@ var Yasgui3D = (() => {
       }
     }
   }
-  function WebGLState(gl, extensions) {
+  function WebGLState(gl, extensions2) {
     function ColorBuffer() {
       let locked = false;
       const color = new Vector4();
@@ -25950,7 +25950,7 @@ var Yasgui3D = (() => {
       return {
         setReversed: function(reversed) {
           if (currentReversed !== reversed) {
-            const ext = extensions.get("EXT_clip_control");
+            const ext = extensions2.get("EXT_clip_control");
             if (reversed) {
               ext.clipControlEXT(ext.LOWER_LEFT_EXT, ext.ZERO_TO_ONE_EXT);
             } else {
@@ -26659,8 +26659,8 @@ var Yasgui3D = (() => {
       reset
     };
   }
-  function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, info) {
-    const multisampledRTTExt = extensions.has("WEBGL_multisampled_render_to_texture") ? extensions.get("WEBGL_multisampled_render_to_texture") : null;
+  function WebGLTextures(_gl, extensions2, state, properties, capabilities, utils, info) {
+    const multisampledRTTExt = extensions2.has("WEBGL_multisampled_render_to_texture") ? extensions2.get("WEBGL_multisampled_render_to_texture") : null;
     const supportsInvalidateFramebuffer = typeof navigator === "undefined" ? false : /OculusBrowser/g.test(navigator.userAgent);
     const _imageDimensions = new Vector2();
     const _videoTextures = /* @__PURE__ */ new WeakMap();
@@ -26774,7 +26774,7 @@ var Yasgui3D = (() => {
         if (glType === _gl.UNSIGNED_SHORT_5_5_5_1) internalFormat = _gl.RGB5_A1;
       }
       if (internalFormat === _gl.R16F || internalFormat === _gl.R32F || internalFormat === _gl.RG16F || internalFormat === _gl.RG32F || internalFormat === _gl.RGBA16F || internalFormat === _gl.RGBA32F) {
-        extensions.get("EXT_color_buffer_float");
+        extensions2.get("EXT_color_buffer_float");
       }
       return internalFormat;
     }
@@ -26988,7 +26988,7 @@ var Yasgui3D = (() => {
       [NotEqualCompare]: _gl.NOTEQUAL
     };
     function setTextureParameters(textureType, texture) {
-      if (texture.type === FloatType && extensions.has("OES_texture_float_linear") === false && (texture.magFilter === LinearFilter || texture.magFilter === LinearMipmapNearestFilter || texture.magFilter === NearestMipmapLinearFilter || texture.magFilter === LinearMipmapLinearFilter || texture.minFilter === LinearFilter || texture.minFilter === LinearMipmapNearestFilter || texture.minFilter === NearestMipmapLinearFilter || texture.minFilter === LinearMipmapLinearFilter)) {
+      if (texture.type === FloatType && extensions2.has("OES_texture_float_linear") === false && (texture.magFilter === LinearFilter || texture.magFilter === LinearMipmapNearestFilter || texture.magFilter === NearestMipmapLinearFilter || texture.magFilter === LinearMipmapLinearFilter || texture.minFilter === LinearFilter || texture.minFilter === LinearMipmapNearestFilter || texture.minFilter === NearestMipmapLinearFilter || texture.minFilter === LinearMipmapLinearFilter)) {
         warn("WebGLRenderer: Unable to use linear filtering with floating point textures. OES_texture_float_linear not supported on this device.");
       }
       _gl.texParameteri(textureType, _gl.TEXTURE_WRAP_S, wrappingToGL[texture.wrapS]);
@@ -27002,12 +27002,12 @@ var Yasgui3D = (() => {
         _gl.texParameteri(textureType, _gl.TEXTURE_COMPARE_MODE, _gl.COMPARE_REF_TO_TEXTURE);
         _gl.texParameteri(textureType, _gl.TEXTURE_COMPARE_FUNC, compareToGL[texture.compareFunction]);
       }
-      if (extensions.has("EXT_texture_filter_anisotropic") === true) {
+      if (extensions2.has("EXT_texture_filter_anisotropic") === true) {
         if (texture.magFilter === NearestFilter) return;
         if (texture.minFilter !== NearestMipmapLinearFilter && texture.minFilter !== LinearMipmapLinearFilter) return;
-        if (texture.type === FloatType && extensions.has("OES_texture_float_linear") === false) return;
+        if (texture.type === FloatType && extensions2.has("OES_texture_float_linear") === false) return;
         if (texture.anisotropy > 1 || properties.get(texture).__currentAnisotropy) {
-          const extension = extensions.get("EXT_texture_filter_anisotropic");
+          const extension = extensions2.get("EXT_texture_filter_anisotropic");
           _gl.texParameterf(textureType, extension.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(texture.anisotropy, capabilities.getMaxAnisotropy()));
           properties.get(texture).__currentAnisotropy = texture.anisotropy;
         }
@@ -27841,7 +27841,7 @@ var Yasgui3D = (() => {
     }
     function useMultisampledRTT(renderTarget) {
       const renderTargetProperties = properties.get(renderTarget);
-      return renderTarget.samples > 0 && extensions.has("WEBGL_multisampled_render_to_texture") === true && renderTargetProperties.__useRenderToTexture !== false;
+      return renderTarget.samples > 0 && extensions2.has("WEBGL_multisampled_render_to_texture") === true && renderTargetProperties.__useRenderToTexture !== false;
     }
     function updateVideoTexture(texture) {
       const frame = info.render.frame;
@@ -27896,7 +27896,7 @@ var Yasgui3D = (() => {
       return state.buffers.depth.getReversed();
     };
   }
-  function WebGLUtils(gl, extensions) {
+  function WebGLUtils(gl, extensions2) {
     function convert(p, colorSpace = NoColorSpace) {
       let extension;
       const transfer = ColorManagement.getTransfer(colorSpace);
@@ -27924,7 +27924,7 @@ var Yasgui3D = (() => {
       if (p === RGBAIntegerFormat) return gl.RGBA_INTEGER;
       if (p === RGB_S3TC_DXT1_Format || p === RGBA_S3TC_DXT1_Format || p === RGBA_S3TC_DXT3_Format || p === RGBA_S3TC_DXT5_Format) {
         if (transfer === SRGBTransfer) {
-          extension = extensions.get("WEBGL_compressed_texture_s3tc_srgb");
+          extension = extensions2.get("WEBGL_compressed_texture_s3tc_srgb");
           if (extension !== null) {
             if (p === RGB_S3TC_DXT1_Format) return extension.COMPRESSED_SRGB_S3TC_DXT1_EXT;
             if (p === RGBA_S3TC_DXT1_Format) return extension.COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
@@ -27934,7 +27934,7 @@ var Yasgui3D = (() => {
             return null;
           }
         } else {
-          extension = extensions.get("WEBGL_compressed_texture_s3tc");
+          extension = extensions2.get("WEBGL_compressed_texture_s3tc");
           if (extension !== null) {
             if (p === RGB_S3TC_DXT1_Format) return extension.COMPRESSED_RGB_S3TC_DXT1_EXT;
             if (p === RGBA_S3TC_DXT1_Format) return extension.COMPRESSED_RGBA_S3TC_DXT1_EXT;
@@ -27946,7 +27946,7 @@ var Yasgui3D = (() => {
         }
       }
       if (p === RGB_PVRTC_4BPPV1_Format || p === RGB_PVRTC_2BPPV1_Format || p === RGBA_PVRTC_4BPPV1_Format || p === RGBA_PVRTC_2BPPV1_Format) {
-        extension = extensions.get("WEBGL_compressed_texture_pvrtc");
+        extension = extensions2.get("WEBGL_compressed_texture_pvrtc");
         if (extension !== null) {
           if (p === RGB_PVRTC_4BPPV1_Format) return extension.COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
           if (p === RGB_PVRTC_2BPPV1_Format) return extension.COMPRESSED_RGB_PVRTC_2BPPV1_IMG;
@@ -27957,7 +27957,7 @@ var Yasgui3D = (() => {
         }
       }
       if (p === RGB_ETC1_Format || p === RGB_ETC2_Format || p === RGBA_ETC2_EAC_Format || p === R11_EAC_Format || p === SIGNED_R11_EAC_Format || p === RG11_EAC_Format || p === SIGNED_RG11_EAC_Format) {
-        extension = extensions.get("WEBGL_compressed_texture_etc");
+        extension = extensions2.get("WEBGL_compressed_texture_etc");
         if (extension !== null) {
           if (p === RGB_ETC1_Format || p === RGB_ETC2_Format) return transfer === SRGBTransfer ? extension.COMPRESSED_SRGB8_ETC2 : extension.COMPRESSED_RGB8_ETC2;
           if (p === RGBA_ETC2_EAC_Format) return transfer === SRGBTransfer ? extension.COMPRESSED_SRGB8_ALPHA8_ETC2_EAC : extension.COMPRESSED_RGBA8_ETC2_EAC;
@@ -27970,7 +27970,7 @@ var Yasgui3D = (() => {
         }
       }
       if (p === RGBA_ASTC_4x4_Format || p === RGBA_ASTC_5x4_Format || p === RGBA_ASTC_5x5_Format || p === RGBA_ASTC_6x5_Format || p === RGBA_ASTC_6x6_Format || p === RGBA_ASTC_8x5_Format || p === RGBA_ASTC_8x6_Format || p === RGBA_ASTC_8x8_Format || p === RGBA_ASTC_10x5_Format || p === RGBA_ASTC_10x6_Format || p === RGBA_ASTC_10x8_Format || p === RGBA_ASTC_10x10_Format || p === RGBA_ASTC_12x10_Format || p === RGBA_ASTC_12x12_Format) {
-        extension = extensions.get("WEBGL_compressed_texture_astc");
+        extension = extensions2.get("WEBGL_compressed_texture_astc");
         if (extension !== null) {
           if (p === RGBA_ASTC_4x4_Format) return transfer === SRGBTransfer ? extension.COMPRESSED_SRGB8_ALPHA8_ASTC_4x4_KHR : extension.COMPRESSED_RGBA_ASTC_4x4_KHR;
           if (p === RGBA_ASTC_5x4_Format) return transfer === SRGBTransfer ? extension.COMPRESSED_SRGB8_ALPHA8_ASTC_5x4_KHR : extension.COMPRESSED_RGBA_ASTC_5x4_KHR;
@@ -27991,7 +27991,7 @@ var Yasgui3D = (() => {
         }
       }
       if (p === RGBA_BPTC_Format || p === RGB_BPTC_SIGNED_Format || p === RGB_BPTC_UNSIGNED_Format) {
-        extension = extensions.get("EXT_texture_compression_bptc");
+        extension = extensions2.get("EXT_texture_compression_bptc");
         if (extension !== null) {
           if (p === RGBA_BPTC_Format) return transfer === SRGBTransfer ? extension.COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT : extension.COMPRESSED_RGBA_BPTC_UNORM_EXT;
           if (p === RGB_BPTC_SIGNED_Format) return extension.COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT;
@@ -28001,7 +28001,7 @@ var Yasgui3D = (() => {
         }
       }
       if (p === RED_RGTC1_Format || p === SIGNED_RED_RGTC1_Format || p === RED_GREEN_RGTC2_Format || p === SIGNED_RED_GREEN_RGTC2_Format) {
-        extension = extensions.get("EXT_texture_compression_rgtc");
+        extension = extensions2.get("EXT_texture_compression_rgtc");
         if (extension !== null) {
           if (p === RED_RGTC1_Format) return extension.COMPRESSED_RED_RGTC1_EXT;
           if (p === SIGNED_RED_RGTC1_Format) return extension.COMPRESSED_SIGNED_RED_RGTC1_EXT;
@@ -29789,23 +29789,23 @@ void main() {
         error("WebGLRenderer: " + e.message);
         throw e;
       }
-      let extensions, capabilities, state, info;
+      let extensions2, capabilities, state, info;
       let properties, textures, environments, attributes, geometries, objects;
       let programCache, materials, renderLists, renderStates, clipping, shadowMap;
       let background, morphtargets, bufferRenderer, indexedBufferRenderer;
       let utils, bindingStates, uniformsGroups;
       function initGLContext() {
-        extensions = new WebGLExtensions(_gl);
-        extensions.init();
-        utils = new WebGLUtils(_gl, extensions);
-        capabilities = new WebGLCapabilities(_gl, extensions, parameters, utils);
-        state = new WebGLState(_gl, extensions);
+        extensions2 = new WebGLExtensions(_gl);
+        extensions2.init();
+        utils = new WebGLUtils(_gl, extensions2);
+        capabilities = new WebGLCapabilities(_gl, extensions2, parameters, utils);
+        state = new WebGLState(_gl, extensions2);
         if (capabilities.reversedDepthBuffer && reversedDepthBuffer) {
           state.buffers.depth.setReversed(true);
         }
         info = new WebGLInfo(_gl);
         properties = new WebGLProperties();
-        textures = new WebGLTextures(_gl, extensions, state, properties, capabilities, utils, info);
+        textures = new WebGLTextures(_gl, extensions2, state, properties, capabilities, utils, info);
         environments = new WebGLEnvironments(_this);
         attributes = new WebGLAttributes(_gl);
         bindingStates = new WebGLBindingStates(_gl, attributes);
@@ -29813,18 +29813,18 @@ void main() {
         objects = new WebGLObjects(_gl, geometries, attributes, bindingStates, info);
         morphtargets = new WebGLMorphtargets(_gl, capabilities, textures);
         clipping = new WebGLClipping(properties);
-        programCache = new WebGLPrograms(_this, environments, extensions, capabilities, bindingStates, clipping);
+        programCache = new WebGLPrograms(_this, environments, extensions2, capabilities, bindingStates, clipping);
         materials = new WebGLMaterials(_this, properties);
         renderLists = new WebGLRenderLists();
-        renderStates = new WebGLRenderStates(extensions);
+        renderStates = new WebGLRenderStates(extensions2);
         background = new WebGLBackground(_this, environments, state, objects, _alpha, premultipliedAlpha);
         shadowMap = new WebGLShadowMap(_this, objects, capabilities);
         uniformsGroups = new WebGLUniformsGroups(_gl, info, capabilities, state);
-        bufferRenderer = new WebGLBufferRenderer(_gl, extensions, info);
-        indexedBufferRenderer = new WebGLIndexedBufferRenderer(_gl, extensions, info);
+        bufferRenderer = new WebGLBufferRenderer(_gl, extensions2, info);
+        indexedBufferRenderer = new WebGLIndexedBufferRenderer(_gl, extensions2, info);
         info.programs = programCache.programs;
         _this.capabilities = capabilities;
-        _this.extensions = extensions;
+        _this.extensions = extensions2;
         _this.properties = properties;
         _this.renderLists = renderLists;
         _this.shadowMap = shadowMap;
@@ -29844,11 +29844,11 @@ void main() {
         return _gl.getContextAttributes();
       };
       this.forceContextLoss = function() {
-        const extension = extensions.get("WEBGL_lose_context");
+        const extension = extensions2.get("WEBGL_lose_context");
         if (extension) extension.loseContext();
       };
       this.forceContextRestore = function() {
-        const extension = extensions.get("WEBGL_lose_context");
+        const extension = extensions2.get("WEBGL_lose_context");
         if (extension) extension.restoreContext();
       };
       this.getPixelRatio = function() {
@@ -30134,7 +30134,7 @@ void main() {
             warnOnce("WebGLRenderer: renderMultiDrawInstances has been deprecated and will be removed in r184. Append to renderMultiDraw arguments and use indirection.");
             renderer.renderMultiDrawInstances(object._multiDrawStarts, object._multiDrawCounts, object._multiDrawCount, object._multiDrawInstances);
           } else {
-            if (!extensions.get("WEBGL_multi_draw")) {
+            if (!extensions2.get("WEBGL_multi_draw")) {
               const starts = object._multiDrawStarts;
               const counts = object._multiDrawCounts;
               const drawCount2 = object._multiDrawCount;
@@ -30234,7 +30234,7 @@ void main() {
             }
             setTimeout(checkMaterialsReady, 10);
           }
-          if (extensions.get("KHR_parallel_shader_compile") !== null) {
+          if (extensions2.get("KHR_parallel_shader_compile") !== null) {
             checkMaterialsReady();
           } else {
             setTimeout(checkMaterialsReady, 10);
@@ -30433,7 +30433,7 @@ void main() {
           return;
         }
         if (currentRenderState.state.transmissionRenderTarget[camera.id] === void 0) {
-          const hasHalfFloatSupport = extensions.has("EXT_color_buffer_half_float") || extensions.has("EXT_color_buffer_float");
+          const hasHalfFloatSupport = extensions2.has("EXT_color_buffer_half_float") || extensions2.has("EXT_color_buffer_float");
           currentRenderState.state.transmissionRenderTarget[camera.id] = new WebGLRenderTarget(1, 1, {
             generateMipmaps: true,
             type: hasHalfFloatSupport ? HalfFloatType : UnsignedByteType,
@@ -30467,7 +30467,7 @@ void main() {
         renderObjects(opaqueObjects, scene, camera);
         textures.updateMultisampleRenderTarget(transmissionRenderTarget);
         textures.updateRenderTargetMipmap(transmissionRenderTarget);
-        if (extensions.has("WEBGL_multisampled_render_to_texture") === false) {
+        if (extensions2.has("WEBGL_multisampled_render_to_texture") === false) {
           let renderTargetNeedsUpdate = false;
           for (let i = 0, l = transmissiveObjects.length; i < l; i++) {
             const renderItem = transmissiveObjects[i];
@@ -32396,7 +32396,7 @@ void main() {
      */
     parse(data, path, onLoad, onError) {
       let json;
-      const extensions = {};
+      const extensions2 = {};
       const plugins = {};
       const textDecoder = new TextDecoder();
       if (typeof data === "string") {
@@ -32405,12 +32405,12 @@ void main() {
         const magic = textDecoder.decode(new Uint8Array(data, 0, 4));
         if (magic === BINARY_EXTENSION_HEADER_MAGIC) {
           try {
-            extensions[EXTENSIONS.KHR_BINARY_GLTF] = new GLTFBinaryExtension(data);
+            extensions2[EXTENSIONS.KHR_BINARY_GLTF] = new GLTFBinaryExtension(data);
           } catch (error2) {
             if (onError) onError(error2);
             return;
           }
-          json = JSON.parse(extensions[EXTENSIONS.KHR_BINARY_GLTF].content);
+          json = JSON.parse(extensions2[EXTENSIONS.KHR_BINARY_GLTF].content);
         } else {
           json = JSON.parse(textDecoder.decode(data));
         }
@@ -32434,7 +32434,7 @@ void main() {
         const plugin = this.pluginCallbacks[i](parser);
         if (!plugin.name) console.error("THREE.GLTFLoader: Invalid plugin found: missing name");
         plugins[plugin.name] = plugin;
-        extensions[plugin.name] = true;
+        extensions2[plugin.name] = true;
       }
       if (json.extensionsUsed) {
         for (let i = 0; i < json.extensionsUsed.length; ++i) {
@@ -32442,16 +32442,16 @@ void main() {
           const extensionsRequired = json.extensionsRequired || [];
           switch (extensionName) {
             case EXTENSIONS.KHR_MATERIALS_UNLIT:
-              extensions[extensionName] = new GLTFMaterialsUnlitExtension();
+              extensions2[extensionName] = new GLTFMaterialsUnlitExtension();
               break;
             case EXTENSIONS.KHR_DRACO_MESH_COMPRESSION:
-              extensions[extensionName] = new GLTFDracoMeshCompressionExtension(json, this.dracoLoader);
+              extensions2[extensionName] = new GLTFDracoMeshCompressionExtension(json, this.dracoLoader);
               break;
             case EXTENSIONS.KHR_TEXTURE_TRANSFORM:
-              extensions[extensionName] = new GLTFTextureTransformExtension();
+              extensions2[extensionName] = new GLTFTextureTransformExtension();
               break;
             case EXTENSIONS.KHR_MESH_QUANTIZATION:
-              extensions[extensionName] = new GLTFMeshQuantizationExtension();
+              extensions2[extensionName] = new GLTFMeshQuantizationExtension();
               break;
             default:
               if (extensionsRequired.indexOf(extensionName) >= 0 && plugins[extensionName] === void 0) {
@@ -32460,7 +32460,7 @@ void main() {
           }
         }
       }
-      parser.setExtensions(extensions);
+      parser.setExtensions(extensions2);
       parser.setPlugins(plugins);
       parser.parse(onLoad, onError);
     }
@@ -32550,8 +32550,8 @@ void main() {
       let dependency = parser.cache.get(cacheKey);
       if (dependency) return dependency;
       const json = parser.json;
-      const extensions = json.extensions && json.extensions[this.name] || {};
-      const lightDefs = extensions.lights || [];
+      const extensions2 = json.extensions && json.extensions[this.name] || {};
+      const lightDefs = extensions2.lights || [];
       const lightDef = lightDefs[lightIndex];
       let lightNode;
       const color = new Color(16777215);
@@ -33506,8 +33506,8 @@ void main() {
         this.fileLoader.setWithCredentials(true);
       }
     }
-    setExtensions(extensions) {
-      this.extensions = extensions;
+    setExtensions(extensions2) {
+      this.extensions = extensions2;
     }
     setPlugins(plugins) {
       this.plugins = plugins;
@@ -33515,7 +33515,7 @@ void main() {
     parse(onLoad, onError) {
       const parser = this;
       const json = this.json;
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       this.cache.removeAll();
       this.nodeCache = {};
       this._invokeAll(function(ext) {
@@ -33539,7 +33539,7 @@ void main() {
           parser,
           userData: {}
         };
-        addUnknownExtensionsToUserData(extensions, result, json);
+        addUnknownExtensionsToUserData(extensions2, result, json);
         assignExtrasToUserData(result, json);
         return Promise.all(parser._invokeAll(function(ext) {
           return ext.afterRoot && ext.afterRoot(result);
@@ -33625,20 +33625,20 @@ void main() {
       return ref;
     }
     _invokeOne(func) {
-      const extensions = Object.values(this.plugins);
-      extensions.push(this);
-      for (let i = 0; i < extensions.length; i++) {
-        const result = func(extensions[i]);
+      const extensions2 = Object.values(this.plugins);
+      extensions2.push(this);
+      for (let i = 0; i < extensions2.length; i++) {
+        const result = func(extensions2[i]);
         if (result) return result;
       }
       return null;
     }
     _invokeAll(func) {
-      const extensions = Object.values(this.plugins);
-      extensions.unshift(this);
+      const extensions2 = Object.values(this.plugins);
+      extensions2.unshift(this);
       const pending = [];
-      for (let i = 0; i < extensions.length; i++) {
-        const result = func(extensions[i]);
+      for (let i = 0; i < extensions2.length; i++) {
+        const result = func(extensions2[i]);
         if (result) pending.push(result);
       }
       return pending;
@@ -34055,14 +34055,14 @@ void main() {
     loadMaterial(materialIndex) {
       const parser = this;
       const json = this.json;
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       const materialDef = json.materials[materialIndex];
       let materialType;
       const materialParams = {};
       const materialExtensions = materialDef.extensions || {};
       const pending = [];
       if (materialExtensions[EXTENSIONS.KHR_MATERIALS_UNLIT]) {
-        const kmuExtension = extensions[EXTENSIONS.KHR_MATERIALS_UNLIT];
+        const kmuExtension = extensions2[EXTENSIONS.KHR_MATERIALS_UNLIT];
         materialType = kmuExtension.getMaterialType();
         pending.push(kmuExtension.extendParams(materialParams, materialDef, parser));
       } else {
@@ -34129,7 +34129,7 @@ void main() {
         if (materialDef.name) material2.name = materialDef.name;
         assignExtrasToUserData(material2, materialDef);
         parser.associations.set(material2, { materials: materialIndex });
-        if (materialDef.extensions) addUnknownExtensionsToUserData(extensions, material2, materialDef);
+        if (materialDef.extensions) addUnknownExtensionsToUserData(extensions2, material2, materialDef);
         return material2;
       });
     }
@@ -34160,10 +34160,10 @@ void main() {
      */
     loadGeometries(primitives) {
       const parser = this;
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       const cache = this.primitiveCache;
       function createDracoPrimitive(primitive) {
-        return extensions[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION].decodePrimitive(primitive, parser).then(function(geometry) {
+        return extensions2[EXTENSIONS.KHR_DRACO_MESH_COMPRESSION].decodePrimitive(primitive, parser).then(function(geometry) {
           return addPrimitiveAttributes(geometry, primitive, parser);
         });
       }
@@ -34197,7 +34197,7 @@ void main() {
     loadMesh(meshIndex) {
       const parser = this;
       const json = this.json;
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       const meshDef = json.meshes[meshIndex];
       const primitives = meshDef.primitives;
       const pending = [];
@@ -34241,7 +34241,7 @@ void main() {
           }
           mesh.name = parser.createUniqueName(meshDef.name || "mesh_" + meshIndex);
           assignExtrasToUserData(mesh, meshDef);
-          if (primitive.extensions) addUnknownExtensionsToUserData(extensions, mesh, primitive);
+          if (primitive.extensions) addUnknownExtensionsToUserData(extensions2, mesh, primitive);
           parser.assignFinalMaterial(mesh);
           meshes.push(mesh);
         }
@@ -34252,11 +34252,11 @@ void main() {
           });
         }
         if (meshes.length === 1) {
-          if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, meshes[0], meshDef);
+          if (meshDef.extensions) addUnknownExtensionsToUserData(extensions2, meshes[0], meshDef);
           return meshes[0];
         }
         const group = new Group();
-        if (meshDef.extensions) addUnknownExtensionsToUserData(extensions, group, meshDef);
+        if (meshDef.extensions) addUnknownExtensionsToUserData(extensions2, group, meshDef);
         parser.associations.set(group, { meshes: meshIndex });
         for (let i = 0, il = meshes.length; i < il; i++) {
           group.add(meshes[i]);
@@ -34463,7 +34463,7 @@ void main() {
     // skin and child nodes are created and added in .loadNode() (no '_' prefix).
     _loadNodeShallow(nodeIndex) {
       const json = this.json;
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       const parser = this;
       if (this.nodeCache[nodeIndex] !== void 0) {
         return this.nodeCache[nodeIndex];
@@ -34508,7 +34508,7 @@ void main() {
           node.name = nodeName;
         }
         assignExtrasToUserData(node, nodeDef);
-        if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions, node, nodeDef);
+        if (nodeDef.extensions) addUnknownExtensionsToUserData(extensions2, node, nodeDef);
         if (nodeDef.matrix !== void 0) {
           const matrix = new Matrix4();
           matrix.fromArray(nodeDef.matrix);
@@ -34543,13 +34543,13 @@ void main() {
      * @return {Promise<Group>}
      */
     loadScene(sceneIndex) {
-      const extensions = this.extensions;
+      const extensions2 = this.extensions;
       const sceneDef = this.json.scenes[sceneIndex];
       const parser = this;
       const scene = new Group();
       if (sceneDef.name) scene.name = parser.createUniqueName(sceneDef.name);
       assignExtrasToUserData(scene, sceneDef);
-      if (sceneDef.extensions) addUnknownExtensionsToUserData(extensions, scene, sceneDef);
+      if (sceneDef.extensions) addUnknownExtensionsToUserData(extensions2, scene, sceneDef);
       const nodeIds = sceneDef.nodes || [];
       const pending = [];
       for (let i = 0, il = nodeIds.length; i < il; i++) {
@@ -36022,6 +36022,114 @@ void main() {
         geometry.setAttribute("color", new Float32BufferAttribute(colors, 3));
       }
       return geometry;
+    }
+  };
+
+  // node_modules/three/examples/jsm/renderers/CSS2DRenderer.js
+  var _vector = new Vector3();
+  var _viewMatrix = new Matrix4();
+  var _viewProjectionMatrix = new Matrix4();
+  var _a = new Vector3();
+  var _b = new Vector3();
+  var CSS2DRenderer = class {
+    /**
+     * Constructs a new CSS2D renderer.
+     *
+     * @param {CSS2DRenderer~Parameters} [parameters] - The parameters.
+     */
+    constructor(parameters = {}) {
+      const _this = this;
+      let _width, _height;
+      let _widthHalf, _heightHalf;
+      const cache = {
+        objects: /* @__PURE__ */ new WeakMap()
+      };
+      const domElement = parameters.element !== void 0 ? parameters.element : document.createElement("div");
+      domElement.style.overflow = "hidden";
+      this.domElement = domElement;
+      this.sortObjects = true;
+      this.getSize = function() {
+        return {
+          width: _width,
+          height: _height
+        };
+      };
+      this.render = function(scene, camera) {
+        if (scene.matrixWorldAutoUpdate === true) scene.updateMatrixWorld();
+        if (camera.parent === null && camera.matrixWorldAutoUpdate === true) camera.updateMatrixWorld();
+        _viewMatrix.copy(camera.matrixWorldInverse);
+        _viewProjectionMatrix.multiplyMatrices(camera.projectionMatrix, _viewMatrix);
+        renderObject(scene, scene, camera);
+        if (this.sortObjects) zOrder(scene);
+      };
+      this.setSize = function(width, height) {
+        _width = width;
+        _height = height;
+        _widthHalf = _width / 2;
+        _heightHalf = _height / 2;
+        domElement.style.width = width + "px";
+        domElement.style.height = height + "px";
+      };
+      function hideObject(object) {
+        if (object.isCSS2DObject) object.element.style.display = "none";
+        for (let i = 0, l = object.children.length; i < l; i++) {
+          hideObject(object.children[i]);
+        }
+      }
+      function renderObject(object, scene, camera) {
+        if (object.visible === false) {
+          hideObject(object);
+          return;
+        }
+        if (object.isCSS2DObject) {
+          _vector.setFromMatrixPosition(object.matrixWorld);
+          _vector.applyMatrix4(_viewProjectionMatrix);
+          const visible = _vector.z >= -1 && _vector.z <= 1 && object.layers.test(camera.layers) === true;
+          const element = object.element;
+          element.style.display = visible === true ? "" : "none";
+          if (visible === true) {
+            object.onBeforeRender(_this, scene, camera);
+            element.style.transform = "translate(" + -100 * object.center.x + "%," + -100 * object.center.y + "%)translate(" + (_vector.x * _widthHalf + _widthHalf) + "px," + (-_vector.y * _heightHalf + _heightHalf) + "px)";
+            if (element.parentNode !== domElement) {
+              domElement.appendChild(element);
+            }
+            object.onAfterRender(_this, scene, camera);
+          }
+          const objectData = {
+            distanceToCameraSquared: getDistanceToSquared(camera, object)
+          };
+          cache.objects.set(object, objectData);
+        }
+        for (let i = 0, l = object.children.length; i < l; i++) {
+          renderObject(object.children[i], scene, camera);
+        }
+      }
+      function getDistanceToSquared(object1, object2) {
+        _a.setFromMatrixPosition(object1.matrixWorld);
+        _b.setFromMatrixPosition(object2.matrixWorld);
+        return _a.distanceToSquared(_b);
+      }
+      function filterAndFlatten(scene) {
+        const result = [];
+        scene.traverseVisible(function(object) {
+          if (object.isCSS2DObject) result.push(object);
+        });
+        return result;
+      }
+      function zOrder(scene) {
+        const sorted = filterAndFlatten(scene).sort(function(a, b) {
+          if (a.renderOrder !== b.renderOrder) {
+            return b.renderOrder - a.renderOrder;
+          }
+          const distanceA = cache.objects.get(a).distanceToCameraSquared;
+          const distanceB = cache.objects.get(b).distanceToCameraSquared;
+          return distanceA - distanceB;
+        });
+        const zMax = sorted.length;
+        for (let i = 0, l = sorted.length; i < l; i++) {
+          sorted[i].element.style.zIndex = zMax - i;
+        }
+      }
     }
   };
 
@@ -37746,10 +37854,13 @@ void main() {
     ply = ply.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new PLYLoader();
     let object = loader.parse(ply);
-    console.log(object);
-    const mesh = new Mesh(object, material);
-    console.log(mesh);
-    return mesh;
+    return new Mesh(object, material);
+  };
+  var loadPLY = async (ply) => {
+    ply = ply.replaceAll(/^\s+|\s+$/gu, "");
+    let loader = new PLYLoader();
+    let object = await loader.loadAsync(ply);
+    return new Mesh(object, material);
   };
   var parseOBJ = async (obj) => {
     obj = obj.replaceAll(/^\s+|\s+$/gu, "");
@@ -37760,6 +37871,12 @@ void main() {
     console.log(mesh);
     return mesh;
   };
+  var loadOBJ = async (obj) => {
+    obj = obj.replaceAll(/^\s+|\s+$/gu, "");
+    let loader = new OBJLoader();
+    let object = await loader.loadAsync(obj);
+    return new Mesh(object, material);
+  };
   var parseGLTF = async (gltf) => {
     gltf = gltf.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new GLTFLoader();
@@ -37769,23 +37886,48 @@ void main() {
     console.log(mesh);
     return mesh;
   };
+  var loadGLTF = async (gltf) => {
+    gltf = gltf.replaceAll(/^\s+|\s+$/gu, "");
+    let loader = new GLTFLoader();
+    let object = await loader.loadAsync(gltf);
+    return new Mesh(object, material);
+  };
   var parseSTL = async (stl) => {
     stl = stl.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new STLLoader();
     let object = loader.parse(stl);
-    console.log(object);
-    const mesh = new Mesh(object, material);
-    console.log(mesh);
-    return mesh;
+    return new Mesh(object, material);
+  };
+  var loadSTL = async (stl) => {
+    stl = stl.replaceAll(/^\s+|\s+$/gu, "");
+    let loader = new STLLoader();
+    let object = await loader.loadAsync(stl);
+    return new Mesh(object, material);
+  };
+  var parseURILink = async (urilink) => {
+    urilink = urilink.replaceAll(/^\s+|\s+$/gu, "");
+    if (urilink.includes(".")) {
+      let ext = urilink.substring(urilink.lastIndexOf(".") + 1);
+      if (ext in extensions) {
+        let ld = extensions[ext];
+        return await ld(urilink);
+      }
+    }
+    return "";
   };
   var parseXYZ = async (xyz) => {
     xyz = xyz.replaceAll(/^\s+|\s+$/gu, "");
     let loader = new XYZLoader();
     let object = loader.parse(xyz);
-    console.log(object);
     const mesh = new Mesh(object, material);
     console.log(mesh);
     return mesh;
+  };
+  var loadXYZ = async (xyz) => {
+    xyz = xyz.replaceAll(/^\s+|\s+$/gu, "");
+    let loader = new XYZLoader();
+    let object = await loader.loadAsync(xyz);
+    return new Mesh(object, material);
   };
   var create3DObject = async (bindings, column) => await Promise.all(
     bindings.map(
@@ -37800,7 +37942,15 @@ void main() {
     "http://www.opengis.net/ont/geosparql#objLiteral": parseOBJ,
     "http://www.opengis.net/ont/geosparql#plyLiteral": parsePLY,
     "http://www.opengis.net/ont/geosparql#stlLiteral": parseSTL,
-    "http://www.opengis.net/ont/geosparql#xyzLiteral": parseXYZ
+    "http://www.opengis.net/ont/geosparql#xyzLiteral": parseXYZ,
+    "http://www.w3.org/2001/XMLSchema#anyURI": parseURILink
+  };
+  var extensions = {
+    "gltf": loadGLTF,
+    "obj": loadOBJ,
+    "ply": loadPLY,
+    "stl": loadSTL,
+    "xyz": loadXYZ
   };
   var YasGUI3DPlugin = class {
     axesHelper;
@@ -37920,6 +38070,12 @@ void main() {
       this.renderer.setPixelRatio(window.devicePixelRatio);
       this.renderer.setSize(width, height);
       document.getElementById(domelement).appendChild(this.renderer.domElement);
+      const labelRenderer = new CSS2DRenderer();
+      labelRenderer.setSize(window.innerWidth, window.innerHeight);
+      labelRenderer.domElement.style.position = "absolute";
+      labelRenderer.domElement.style.top = "0px";
+      labelRenderer.domElement.style.pointerEvents = "none";
+      document.body.appendChild(labelRenderer.domElement);
       let bbox = null;
       this.camera = new PerspectiveCamera(90, width / height, 0.1, 2e3);
       this.light = new DirectionalLight(16777215, 1);
