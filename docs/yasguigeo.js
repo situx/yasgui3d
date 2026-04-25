@@ -37906,8 +37906,10 @@ void main() {
   };
   var parseURILink = async (urilink) => {
     urilink = urilink.replaceAll(/^\s+|\s+$/gu, "");
+    console.log(urilink);
     if (urilink.includes(".")) {
       let ext = urilink.substring(urilink.lastIndexOf(".") + 1);
+      console.log(ext);
       if (ext in extensions) {
         let ld = extensions[ext];
         return await ld(urilink);
