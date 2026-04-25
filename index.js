@@ -1,29 +1,119 @@
-import 'leaflet/dist/leaflet.css';
 import * as THREE from 'three';
-import renderer from 'three/src/renderers/common/Renderer.js';
-import scene from 'three/addons/offscreen/scene.js';
-import { GLTFLoader, OBJLoader, OrbitControls, PLYLoader } from 'three/addons';
+import { CSS2DRenderer, GLTFLoader, OBJLoader, OrbitControls, PLYLoader, STLLoader, XYZLoader } from 'three/addons';
+import GUI from 'lil-gui';
+
 
 const material = new THREE.MeshPhongMaterial({
-  color: 0xffffff,
+  color: 0xff0000,
   flatShading: true,
-  vertexColors: THREE.VertexColors,
-  wireframe: false
+  vertexColors: true,
+  wireframe: false,
+  emissive: new THREE.Color(1, 1, 1),
+  emissiveIntensity: 0.8,
 });
 
 const parsePLY = async (ply) => {
   ply=ply.replaceAll(/^\s+|\s+$/gu, '');
   let loader = new PLYLoader();
   let object=loader.parse(ply);
-  const mesh = new THREE.Mesh(object, material);
-  objects.add(mesh);
-  scene.add(objects);
-  addRotationControls(object,geometryF,objects)
-  if(objects.children.length>0){
-    camera.lookAt( objects.children[0].position );
-  }
-  fitCameraToSelection(camera, controls, objects.children)
+  return new THREE.Mesh(object, material);
 }
+
+const loadPLY = async (ply) => {
+  ply=ply.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new PLYLoader();
+  let object=await loader.loadAsync(ply);
+  return new THREE.Mesh(object, material);
+}
+
+const parseOBJ = async (obj) => {
+  obj=obj.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new OBJLoader();
+  let object=loader.parse(obj);
+  console.log(object);
+  const mesh=new THREE.Mesh(object.getAll()[0], material);
+  console.log(mesh);
+  return mesh
+}
+
+const loadOBJ = async (obj) => {
+  obj=obj.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new OBJLoader();
+  let object=await loader.loadAsync(obj);
+  return new THREE.Mesh(object, material);
+}
+
+const parseGLTF = async (gltf) => {
+  gltf=gltf.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new GLTFLoader();
+  let object=await loader.parseAsync(gltf,"http://www.gltf.com/data/");
+  console.log(object);
+  const mesh=new THREE.Mesh(object, material);
+  console.log(mesh);
+  return mesh
+}
+
+const loadGLTF = async (gltf) => {
+  gltf=gltf.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new GLTFLoader();
+  let object=await loader.loadAsync(gltf);
+  return new THREE.Mesh(object, material);
+}
+
+const parseSTL = async (stl) => {
+  stl=stl.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new STLLoader();
+  let object=loader.parse(stl);
+  return new THREE.Mesh(object, material);
+}
+
+const loadSTL = async (stl) => {
+  stl=stl.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new STLLoader();
+  let object=await loader.loadAsync(stl);
+  return new THREE.Mesh(object, material);
+}
+
+const parseURILink = async (urilink) => {
+  urilink=urilink.replaceAll(/^\s+|\s+$/gu, '');
+  console.log(urilink);
+  if(urilink.includes(".")){
+    let ext=urilink.substring(urilink.lastIndexOf(".")+1)
+    console.log(ext);
+    if(ext in extensions){
+      let ld=extensions[ext]
+      return await ld(urilink)
+    }
+  }
+  return ""
+}
+
+const parseXYZ = async (xyz) => {
+  xyz=xyz.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new XYZLoader();
+  let object=loader.parse(xyz);
+  const mesh=new THREE.Mesh(object, material);
+  console.log(mesh);
+  return mesh
+}
+
+const loadXYZ = async (xyz) => {
+  xyz=xyz.replaceAll(/^\s+|\s+$/gu, '');
+  let loader = new XYZLoader();
+  let object=await loader.loadAsync(xyz);
+  return new THREE.Mesh(object, material);
+}
+
+
+const create3DObject = async (bindings, column) => (
+  await Promise.all(
+    bindings.map(async (item) => {
+      const converter = conversions[item[column].datatype];
+      return converter
+        ? await converter(item[column].value)
+        : null;
+    },
+  )))
 
 /**
  * Map of supported RDF datatype URIs to converter functions.
@@ -33,32 +123,22 @@ const parsePLY = async (ply) => {
  * @type {Object.<string, function(string): (Object|Promise<Object>)>}
  */
 const conversions = {
-  'http://www.opengis.net/ont/geosparql#plyLiteral': parsePLY
+  'http://www.opengis.net/ont/geosparql#gltfLiteral': parseGLTF,
+  'http://www.opengis.net/ont/geosparql#objLiteral': parseOBJ,
+  'http://www.opengis.net/ont/geosparql#plyLiteral': parsePLY,
+  'http://www.opengis.net/ont/geosparql#stlLiteral': parseSTL,
+  'http://www.opengis.net/ont/geosparql#xyzLiteral': parseXYZ,
+  'http://www.w3.org/2001/XMLSchema#anyURI':parseURILink,
 };
 
-/**
- * Creates a GeoJSON object from SPARQL query bindings.
- *
- * @param {Array} bindings - An array of binding objects from a SPARQL query result.
- * @param {string} wktColumn - The key in the binding objects that contains the WKT (Well-Known Text) geometry.
- * @returns {Object} A GeoJSON object representing the features.
- */
-const createThreeJSView = async (bindings, column) => ({
-  type: 'FeatureCollection',
-  features: await Promise.all(
-    bindings.map(async (item) => {
-      const converter = conversions[item[column].datatype];
-      const geometry = converter
-        ? await converter(item[column].value)
-        : null ;
-      return {
-        type: 'Feature',
-        properties: item,
-        geometry,
-      };
-    }),
-  ),
-});
+const extensions = {
+  'gltf': loadGLTF,
+  'obj': loadOBJ,
+  'ply': loadPLY,
+  'stl': loadSTL,
+  'xyz': loadXYZ,
+};
+
 
 /**
  * GeoPlugin: YASR plugin that displays geographic results in a Leaflet map.
@@ -91,7 +171,35 @@ class YasGUI3DPlugin {
     this.box=new THREE.Box3();
     this.size=new THREE.Vector3();
     this.scene = new THREE.Scene();
+    this.renderer=null;
+    this.scene=null;
     this.axesHelper = new THREE.AxesHelper( Math.max(1000, 1000, 1000) );
+    this.animatefunc = () => this.animate();
+  }
+
+  clear(){
+    if(this.scene!=null && this.rendere!=null){
+      this.renderer.dispose()
+
+      this.scene.traverse(object => {
+        if (!object.isMesh) return
+
+        this.deleteObject(object)
+      })
+    }
+
+  }
+
+  deleteObject(object){
+    object.geometry.dispose()
+
+    if (object.material instanceof Array) {
+      object.material.forEach(material => material.dispose());
+    } else {
+      object.material.dispose();
+    }
+    object.removeFromParent()
+    this.scene.remove(object)
   }
 
   /**
@@ -117,57 +225,13 @@ class YasGUI3DPlugin {
    */
   async draw() {
     this.updateColumns();
-    await this.updateMap();
-  }
-
-
-  prepareAnnotationFromJSON(verts,annotations){
-    const svgShape = new THREE.Shape();
-    let first=true
-    for(vert of verts){
-      if(first){
-        svgShape.moveTo(vert["x"], vert["y"]);
-        first=false
-      }else{
-        svgShape.lineTo(vert["x"], vert["y"]);
-      }
-      vertarray.push(vert["x"])
-      vertarray.push(vert["y"])
-      vertarray.push(vert["z"])
-      let minz,maxz,minx,maxx,miny,maxy;
-      if(vert["z"]>maxz){
-        maxz=vert["z"]
-      }
-      if(vert["z"]<minz){
-        minz=vert["z"]
-      }
-      if(vert["y"]>maxy){
-        maxy=vert["y"]
-      }
-      if(vert["y"]<miny){
-        miny=vert["y"]
-      }
-      if(vert["x"]>maxx){
-        maxy=vert["x"]
-      }
-      if(vert["x"]<minx){
-        miny=vert["x"]
-      }
-    }
-    const extrudedGeometry = new THREE.ExtrudeGeometry(svgShape, { depth: Math.abs(maxz - minz), bevelEnabled: false });
-    extrudedGeometry.computeBoundingBox()
-    const material = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
-    const mesh = new THREE.Mesh( extrudedGeometry, material );
-    if(minz<0){
-      mesh.position.z = minz;
-    }
-    annotations.add(mesh)
-    return annotations
+    await this.update3DView();
   }
 
 
 
-  fitCameraToSelection(camera, controls, selection, fitOffset = 1.2) {
+
+  fitCameraToSelection(camera, controls, selection, fitOffset = 1.5) {
     this.box.makeEmpty();
     for(const object of selection) {
       this.box.expandByObject(object);
@@ -186,148 +250,174 @@ class YasGUI3DPlugin {
       .normalize()
       .multiplyScalar(distance);
 
-    this.controls.maxDistance = distance * 10;
+    this.controls.maxDistance = distance * 100;
     this.controls.target.copy(this.center);
 
     this.camera.near = distance / 100;
-    this.camera.far = distance * 100;
+    this.camera.far = distance * 250;
     this.camera.updateProjectionMatrix();
 
     this.camera.position.copy(this.controls.target).sub(direction);
 
-    this.controls.update();
+    //this.controls.update();
   };
 
-  initThreeJS(domelement,verts,meshurls) {
+
+  async initThreeJS(domelement, verts, meshurls) {
     let loader;
-    let minz=Number.MAX_VALUE
-    let maxz=Number.MIN_VALUE
-    let miny=Number.MAX_VALUE
-    let maxy=Number.MIN_VALUE
-    let minx=Number.MAX_VALUE
-    let maxx=Number.MIN_VALUE
-    let vertarray=[]
-    let annotations=new THREE.Group();
-    const objects=new THREE.Group();
+    let minz = Number.MAX_VALUE
+    let maxz = Number.MIN_VALUE
+    let miny = Number.MAX_VALUE
+    let maxy = Number.MIN_VALUE
+    let minx = Number.MAX_VALUE
+    let maxx = Number.MIN_VALUE
+    let vertarray = []
+    let annotations = new THREE.Group();
+    const objects = new THREE.Group();
+    this.clear();
+    document.getElementById(domelement).innerHTML = '';
+    document.getElementById("threejsnav").innerHTML = '';
+    this.scene = new THREE.Scene();
     console.log(verts)
     const svgShape = new THREE.Shape();
-    let first=true
-    let height=500
-    let width=480
-    annotations=prepareAnnotationFromJSON(verts,annotations)
-    const gui = new dat.GUI({autoPlace: false})
-    gui.domElement.id="gui"
+    let first = true
+    let height = 600
+    let width = 800
+    const gui = new GUI({ autoPlace: false })
+    gui.domElement.id = "gui"
     document.getElementById("threejsnav").appendChild(gui.domElement)
     const geometryFolder = gui.addFolder("Mesh");
     geometryFolder.open();
     const lightingFolder = geometryFolder.addFolder("Lighting");
     const geometryF = geometryFolder.addFolder("Geometry");
     geometryF.open();
-    this.renderer = new THREE.WebGLRenderer( { antialias: false } );
-    this.renderer.setPixelRatio( window.devicePixelRatio );
-    this.renderer.setSize( width, height);
-    document.getElementById(domelement).appendChild( renderer.domElement );
-    let bbox=null
-    if(meshurls.length>0){
-      if(meshurls[0].includes(".ply")){
-        loader = new PLYLoader();
-        loader.load(meshurls[0], function(object){
-          const material = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            flatShading: true,
-            vertexColors: THREE.VertexColors,
-            wireframe: false
-          });
-          const mesh = new THREE.Mesh(object, material);
-          objects.add(mesh);
-          scene.add(objects);
-          addRotationControls(object,geometryF,objects)
-          if(objects.children.length>0){
-            camera.lookAt( objects.children[0].position );
-          }
-          fitCameraToSelection(camera, controls, objects.children)
-        });
-      }else if(meshurls[0].includes(".obj")){
-        loader = new OBJLoader();
-        loader.load(meshurls[0],function ( object ) {objects.add(object);scene.add(objects); addRotationControls(object,geometryF,objects);if(objects.children.length>0){camera.lookAt( objects.children[0].position );}fitCameraToSelection(camera, controls, objects.children) })
-      }else if(meshurls[0].includes(".nxs") || meshurls[0].includes(".nxz")){
-        const nexus_obj = new NexusObject(meshurls[0], function() {
-        }, renderNXS, this.renderer);
-        objects.add(nexus_obj)
-        scene.add(objects);
-        this.addRotationControls(nexus_obj,geometryF,objects)
-        if(objects.children.length>0){
-          camera.lookAt( objects.children[0].position );
-        }
-        this.fitCameraToSelection(camera, controls, objects.children)
-      }else if(meshurls[0].includes(".gltf")){
-        loader = new GLTFLoader();
-        loader.load(meshurls[0], function ( gltf )
-        {
-          let box = gltf.scene;
-          box.position.x = 0;
-          box.position.y = 0;
-          objects.add(box)
-          scene.add(objects);
-          this.addRotationControls(box,geometryF,objects)
-          if(objects.children.length>0){
-            camera.lookAt( objects.children[0].position );
-          }
-          this.fitCameraToSelection(camera, controls, objects.children)
-        });
-      }
-    }
-    //camera = new THREE.PerspectiveCamera(90,window.innerWidth / window.innerHeight, 0.1, 150 );
-    let camera = new THREE.PerspectiveCamera(90,width / height, 0.1, 2000 );
-    scene.add(new THREE.AmbientLight(0x222222));
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(20, 20, 0);
-    scene.add(light);
-    lightingFolder.add(light.position, "x").min(-5).max(5).step(0.01).name("X Position")
-    lightingFolder.add(light.position, "y").min(-5).max(5).step(0.01).name("Y Position")
-    lightingFolder.add(light.position, "z").min(-5).max(5).step(0.01).name("Z Position")
-
-    scene.add( this.axesHelper );
-    console.log("Depth: "+(maxz-minz))
-    scene.add( annotations );
-    let centervec=new THREE.Vector3()
-    let controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.renderer = new THREE.WebGLRenderer({ antialias: false });
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(width, height);
+    document.getElementById(domelement).appendChild(this.renderer.domElement);
+    const labelRenderer = new CSS2DRenderer()
+    labelRenderer.setSize(window.innerWidth, window.innerHeight)
+    labelRenderer.domElement.style.position = 'absolute'
+    labelRenderer.domElement.style.top = '0px'
+    labelRenderer.domElement.style.pointerEvents = 'none'
+    document.body.appendChild(labelRenderer.domElement)
+    let bbox = null
+    this.camera = new THREE.PerspectiveCamera(90, width / height, 0.1, 2000);
+    //this.scene.add(new THREE.AmbientLight(0x222222));
+    this.light = new THREE.DirectionalLight(0xffffff, 1);
+    this.light.position.set(20, 20, 0);
+    this.scene.add(this.light);
+    lightingFolder.add(this.light.position, "x").min(-5).max(5).step(0.01).name("X Position")
+    lightingFolder.add(this.light.position, "y").min(-5).max(5).step(0.01).name("Y Position")
+    lightingFolder.add(this.light.position, "z").min(-5).max(5).step(0.01).name("Z Position")
+    const color = 0x404040;
+    const intensity = 1;
+    this.thelight = new THREE.AmbientLight(color, intensity);
+    this.scene.add(this.thelight);
+    this.scene.add(this.axesHelper);
+    console.log("Depth: " + (maxz - minz))
+    this.scene.add(annotations);
+    let centervec = new THREE.Vector3()
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     //controls.target.set( centervec.x,centervec.y,centervec.z );
-    controls.target.set( 0,0,0 );
-    camera.position.x= 0
-    camera.position.y= 0
-    camera.position.z = 150;
-    controls.maxDistance= Math.max(1000, 1000, 1000)
-    controls.update();
+    this.controls.target.set(0, 0, 0);
+    this.camera.position.x = 0
+    this.camera.position.y = 0
+    this.camera.position.z = 150;
+    this.controls.maxDistance = Math.max(1000, 1000, 1000)
+    this.controls.update();
+    this.controls.addEventListener( 'change', this.renderer );
     const updateCamera = () => {
-      camera.updateProjectionMatrix();
+      this.camera.updateProjectionMatrix();
     }
     const cameraFolder = geometryFolder.addFolder("Camera");
-    cameraFolder.add(camera, 'fov', 1, 180).name('Zoom').onChange(updateCamera);
-    cameraFolder.add(camera.position, 'x').min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
-    cameraFolder.add(camera.position, 'y').min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
-    cameraFolder.add(camera.position, 'z').min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
-    gui.add(objects, 'visible').name('Meshes')
-    gui.add(annotations, 'visible').name('Annotations')
-    gui.add(this.axesHelper, 'visible').name('Axis Helper')
-    gui.add({"FullScreen":toggleFullScreen2}, 'FullScreen')
-    document.addEventListener("fullscreenchange",function(){
-      if(document.fullscreenElement){
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-        this.renderer.setSize( width, height );
-      }
-    })
-    if(meshurls.length>0 && (meshurls[0].includes(".nxs") || meshurls[0].includes(".nxz"))){
-      this.renderNXS()
+    cameraFolder.add(this.camera, 'fov', 1, 180).name('Zoom').onChange(updateCamera);
+    cameraFolder.add(this.camera.position, 'x').min(-500).max(500).step(5).name("X Position").onChange(updateCamera);
+    cameraFolder.add(this.camera.position, 'y').min(-500).max(500).step(5).name("Y Position").onChange(updateCamera);
+    cameraFolder.add(this.camera.position, 'z').min(-500).max(500).step(5).name("Z Position").onChange(updateCamera);
+    //gui.add(annotations, 'visible').name('Annotations')
+    for (const object3DColumn of this.geometry3DColumns) {
+      const colName = object3DColumn.colName;
+      const object3d = await create3DObject(
+        this.yasr.results.json.results.bindings,
+        colName,
+      );
+      console.log(object3d)
+      objects.add(object3d[0]);
+      this.addRotationControls(object3d,geometryF,objects,this.scene)
     }
+    console.log(objects);
+    this.scene.add(objects);
+    gui.add(objects, 'visible').name('Meshes')
+    gui.add(this.axesHelper, 'visible').name('Axis Helper')
+    this.fitCameraToSelection(this.camera, this.controls, objects.children)
     this.animate()
   }
 
   animate() {
-    requestAnimationFrame( animate );
-    this.controls.update();
-    this.renderer.render( scene, this.camera );
+    requestAnimationFrame( this.animatefunc );
+    //console.log(this.controls);
+    //console.log(this.renderer);
+    //console.log(this.scene);
+    //console.log(this.camera);
+    //this.controls.update();
+    this.renderer.render( this.scene, this.camera );
+  }
+
+  addRotationControls(box,geometryF,objects,scene){
+    geometryF.close();
+    let yourVar=null;
+    const rotationFolder = geometryF.addFolder("Rotation");
+    rotationFolder.add(objects.rotation, 'x', 0, Math.PI).name("X").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.rotation.x = yourVar;
+          }});
+      });
+    rotationFolder.add(objects.rotation, 'y', 0, Math.PI).name("Y").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.rotation.y = yourVar;
+          }});
+      });
+    rotationFolder.add(objects.rotation, 'z', 0, Math.PI).name("Z").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.rotation.z = yourVar;
+          }});
+      });
+
+    const scaleFolder = geometryF.addFolder("Scale");
+    scaleFolder.add(objects.scale, 'x', 0, 2).name("X").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.scale.x = yourVar;
+          }});
+      });
+    scaleFolder.add(objects.scale, 'y', 0, 2).name("Y").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.scale.y = yourVar;
+          }});
+      });
+    scaleFolder.add(objects.scale, 'z', 0, 2).name("Z").onChange(
+      function(){
+        yourVar = this.getValue();
+        scene.traverse(function(obj){
+          if(obj.type === 'Mesh'){
+            obj.scale.z = yourVar;
+          }});
+      });
   }
 
   /**
@@ -352,7 +442,7 @@ class YasGUI3DPlugin {
       this.wrapper.appendChild(this.navcontainer);
     }
     this.yasr.resultsEl.appendChild(this.wrapper);
-    this.initThreeJS(this.container)
+    await this.initThreeJS("threejs")
     }
 
 
