@@ -44,6 +44,15 @@ SELECT ?literal
 WHERE {
   BIND("""https://people.sc.fsu.edu/~jburkardt/data/obj/diamond.obj"""^^xsd:anyURI AS ?literal)
 }`,
+"gltfURL":`
+PREFIX my: <http://example.org/ApplicationSchema#>
+PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+SELECT ?literal
+WHERE {
+  BIND("""https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/refs/heads/main/2.0/Cube/glTF/Cube.gltf"""^^xsd:anyURI AS ?literal)
+}`,
 "http://www.opengis.net/ont/geosparql#stlLiteral":`PREFIX my: <http://example.org/ApplicationSchema#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX geof: <http://www.opengis.net/def/function/geosparql/ext/>
