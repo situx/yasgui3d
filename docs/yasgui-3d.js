@@ -38510,22 +38510,25 @@ void main() {
     let geometry;
     if (!wkt.includes("Z")) {
       targetShape = new Shape();
-      for (coords of wkt.split(",")) {
+      for (const coords of wkt.split(",")) {
+        console.log(coords);
         let singlecoords = coords.trim().split(" ");
         if (first) {
-          targetShape.moveTo(singlecoords[0], singlecoords[1]);
+          targetShape.moveTo(Number.parseFloat(singlecoords[0]), Number.parseFloat(singlecoords[1]));
         } else {
-          targetShape.lineTo(singlecoords[0], singlecoords[1]);
+          targetShape.lineTo(Number.parseFloat(singlecoords[0]), Number.parseFloat(singlecoords[1]));
         }
       }
       geometry = new ShapeGeometry(targetShape);
     } else {
       geometry = new BufferGeometry();
       let coordarray = [];
-      for (coords of wkt.split(",")) {
+      for (const coords of wkt.split(",")) {
+        console.log(coords);
         let singlecoords = coords.trim().split(" ");
         coordarray.push(singlecoords[0], singlecoords[1], singlecoords[2]);
       }
+      console.log(coordarray);
       targetShape = new Float32Array(coordarray);
       geometry.setAttribute("position", new BufferAttribute(targetShape, 3));
     }
