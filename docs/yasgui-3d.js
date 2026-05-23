@@ -38504,11 +38504,12 @@ void main() {
   };
   var parseWKT = async (wkt) => {
     wkt = wkt.replaceAll(/^\s+|\s+$/gu, "");
-    wkt = wkt.replaceAll("(", "").replaceAll(")", "");
     let first = false;
     let targetShape;
     let geometry;
     if (!wkt.includes("Z")) {
+      wkt = wkt.substring(wkt.indexOf("(") + 1);
+      wkt = wkt.replaceAll("(", "").replaceAll(")", "");
       targetShape = new Shape();
       for (const coords of wkt.split(",")) {
         console.log(coords);
@@ -38521,6 +38522,8 @@ void main() {
       }
       geometry = new ShapeGeometry(targetShape);
     } else {
+      wkt = wkt.substring(wkt.indexOf("(") + 1);
+      wkt = wkt.replaceAll("(", "").replaceAll(")", "");
       geometry = new BufferGeometry();
       let coordarray = [];
       for (const coords of wkt.split(",")) {
